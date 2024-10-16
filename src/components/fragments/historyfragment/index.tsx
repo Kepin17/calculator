@@ -8,7 +8,7 @@ const HistoryFragment = () => {
     }
   };
   return (
-    <div className="w-[42vw] h-full p-7  bg-slate-800 absolute top-0 left-0 z-10 transtition-all duration-300 ease-in-out" id="history-calc">
+    <div className="w-[42vw] h-full p-7  bg-slate-800 absolute top-0 left-[-42vw] z-10 transtition-all duration-300 ease-in-out" id="history-calc">
       <div className="w-full h-10 flex justify-start items-center text-orange-400 font-bold text-4xl">
         <div className="w-10 h-10 flex justify-center items-center circle hover:bg-slate-100 rounded-full cursor-pointer transtion-all duration-300 ease-in-out" onClick={closeHistory}>
           <IoIosArrowBack />
