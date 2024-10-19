@@ -11,21 +11,34 @@ const CalcFragment = () => {
   // button calc
 
   const handleClick = (value: string) => {
-    // first operator can't be the last
-    if (inputCalc === "" && ["=", "-", "*", "/"].includes(value)) {
+    // Prevent first input from being an operator except minus for negative numbers
+    if (inputCalc === "" && ["+", "*", "/", "%"].includes(value)) {
       return;
     }
 
     const lastChar = inputCalc.slice(-1);
-    if (["+", "-", "*", "/"].includes(lastChar) && ["+", "-", "*", "/"].includes(value)) {
+    const ifLastCharIsPercent = inputCalc.slice(-4);
+
+    // Prevent double operators from being added
+    if ((["+", "-", "*", "/", "%"].includes(lastChar) && ["+", "-", "*", "/", "%"].includes(value)) || (ifLastCharIsPercent === "/100" && value === "%")) {
       return;
     }
+
     if (value === "x") {
       setInputCalc((prev) => prev + "*");
     } else if (value === "/") {
       setInputCalc((prev) => prev + "/");
+    } else if (value === "%") {
+      // Only allow % after a number
+      if (!isNaN(Number(lastChar))) {
+        setInputCalc((prev) => prev + "/100");
+      }
     } else {
-      setInputCalc((prev) => prev + value);
+      if (ifLastCharIsPercent === "/100") {
+        setInputCalc((prev) => prev + "*" + value);
+      } else {
+        setInputCalc((prev) => prev + value);
+      }
     }
   };
 
@@ -63,7 +76,7 @@ const CalcFragment = () => {
   // format display
 
   const formatDisplay = (value: string) => {
-    return value.replace(/\*/g, "x").replace(/\//g, "÷");
+    return value.replace(/\*/g, "x").replace(/\//g, "÷").replace(/÷100/g, "%");
   };
 
   // calc result
@@ -71,7 +84,7 @@ const CalcFragment = () => {
   const calculateResult = () => {
     const lastChar = inputCalc.slice(-1);
 
-    if (!["+", "-", "*", "/"].includes(lastChar)) {
+    if (!["+", "-", "*", "/", "%"].includes(lastChar)) {
       try {
         setResult(evaluate(inputCalc));
       } catch {

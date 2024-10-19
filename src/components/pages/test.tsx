@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { evaluate } from "mathjs"; // Gunakan math.js untuk perhitungan jika diperlukan
+import { evaluate, isNull } from "mathjs"; // Gunakan math.js untuk perhitungan jika diperlukan
 
 const Calculator = () => {
   const [input, setInput] = useState("");
@@ -7,7 +7,22 @@ const Calculator = () => {
 
   // Fungsi untuk menangani input
   const handleClick = (value: string) => {
-    setInput((prev) => prev + value);
+    const lastChar = input.slice(-1); // Ambil karakter terakhir dari input
+
+    if (value === "x") {
+      setInput((prev) => prev + "*");
+    } else if (value === "/") {
+      setInput((prev) => prev + "/");
+    } else if (value === "%") {
+      setInput((prev) => prev + "/100"); // Hitung persentase
+    } else {
+      // Jika terakhir input % dan input baru adalah angka, tambahkan *
+      if (lastChar === "%" && !isNull(value)) {
+        setInput((prev) => prev + "*" + value);
+      } else {
+        setInput((prev) => prev + value);
+      }
+    }
   };
 
   // Fungsi untuk menangani input kurung
